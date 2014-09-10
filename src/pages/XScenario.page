@@ -1,0 +1,81 @@
+<apex:page controller="XScenarioController">
+	<apex:form id="mainForm" >
+    	<apex:pageBlock title="Scenarios" id="scenarioDetails">
+        	<span>Select a scenario: </span>
+        	<apex:selectList value="{!selectedScenario}" size="1" >
+            	<apex:selectOptions value="{!scenarios}" />
+            		<apex:actionsupport event="onchange" action="{!scenarios_SelectedIndexChanged}" rerender="scenarioDetails" />
+        	</apex:selectList>
+        	<br/>
+        	<span>Select a list: </span>
+        	<apex:selectList value="{!selectedList}" size="1" >
+            	<apex:selectOptions value="{!groupLists}"/>
+            		<apex:actionsupport event="onchange" action="{!isReadyToExec}" reRender="scenarioDetails" />
+            	
+        	</apex:selectList>
+        	<br/>
+        	<span>Select a measure: </span>
+        	<apex:selectList value="{!selectedMeasure}" size="1" >
+            	<apex:selectOptions value="{!measures}"/>
+            		<apex:actionsupport event="onchange" action="{!isReadyToExec}" reRender="scenarioDetails" />
+        	</apex:selectList>
+        	<br/> 
+        	<apex:commandButton value="Go" action="{!go}" reRender="mainForm" />
+        	&nbsp;&nbsp;&nbsp;&nbsp;
+        	<apex:commandButton value="Execute" action="{!execute}" reRender="mainForm" disabled="{!IF(readyToExec,false,true)}"/>
+        	&nbsp;&nbsp;&nbsp;&nbsp;
+        	<apex:commandButton value="Promote" action="{!promote}" reRender="mainForm" disabled="{!IF(readyToExec,false,true)}"/>
+        
+    	</apex:pageBlock>
+    	
+    	<apex:pageBlock title="New Scenario" rendered="{!IF(newScenarioSelected,true,false)}" >
+        	<span>Name: </span>
+        	<apex:inputText value="{!scenarioName}" />
+        	&nbsp;&nbsp;&nbsp;&nbsp;
+        	<apex:commandButton value="Create" action="{!create}" />
+        </apex:pageBlock>
+        
+        <apex:pageBlock title="New Contact Group" rendered="{!IF(newGroupSelected,true,false)}">
+        	<span>Group Name: </span>
+        	<apex:inputText value="{!groupName}" />
+        	&nbsp;&nbsp;&nbsp;&nbsp;
+        	
+        	<span>Member: </span>
+        	<c:AutoCompleteV2 allowClear="true" importJquery="true" labelField="Name" 
+        	SObject="Contact" valueField="ID" targetField="{!contactName}" style="width:200px"/>  
+        	
+        	&nbsp;&nbsp;&nbsp;&nbsp;
+        	<apex:commandButton value="Add" action="{!addContact}" reRender="grouptbl"/>
+        	
+        	<apex:pageBlock id="grouptbl" title="Members" >
+	        <apex:pageBlockTable value="{!members}" var="m">
+	            <apex:column headerValue="Name">
+	            	{!m.Name}
+	            </apex:column>
+	       		<apex:column >
+	       			<apex:commandLink action="{!remove}" reRender="grouptbl" >
+	       			<apex:param assignTo="{!contactName}" value="{!m.Id}" name="assignvalue" />Remove</apex:commandLink> 
+	       			 
+	       		</apex:column>
+	       		
+	        </apex:pageBlockTable>
+		</apex:pageBlock>
+		<apex:pageBlockButtons location="bottom">
+        	<apex:commandButton action="{!save}" value="Save" />
+        </apex:pageBlockButtons>
+       	</apex:pageBlock>
+       	
+       	<apex:pageBlock title="Score Details" rendered="{!IF(displayScores,true,false)}">
+	       	 Results will appear below:<br/> 
+	        <apex:inputtextarea value="{!executeOutput}" readonly="true" cols="80" rows="5" >
+			</apex:inputtextarea>
+        <apex:pageBlockTable value="{!scoreDetails}" var="o">
+	            <apex:column headerValue="Name" value="{!o.Contact_Id__r.Name}"/>
+	            <apex:column headerValue="Score" value="{!o.Score__c}"/>
+	            <apex:column headerValue="Rule" value="{!o.Rule_Id__r.Name}"/>
+	            <apex:column headerValue="Date" value="{!o.Calculation_Date__c}"/>
+	        </apex:pageBlockTable>
+		</apex:pageBlock>
+    	{!debug}
+  	</apex:form>
+</apex:page>

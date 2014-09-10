@@ -1,0 +1,81 @@
+<apex:page standardController="Contact" extensions="XScoresQuadrantsController" sidebar="false" >
+<style>
+        .tierBadge {
+               text-align: center;
+               font-family: Arial Narrow, sans-serif;
+               font-size: medium;
+               color: {!textColor};
+               background-color: {!color}; 
+               }
+        
+</style>
+<apex:form styleClass="tierBadge" >
+<h1>{!tier}</h1>
+</apex:form>
+
+<table class="list" align="center">
+            <thead class="rich-table-thead">
+
+                <tr class="headerRow">
+
+                    <th class="headerRow" scope="col" colspan="1">
+
+                    </th>
+                    <th class="headerRow" scope="col" colspan="1" style="text-align: center;">
+	                    <div>Contributed</div>
+                    </th>
+                    <th class="headerRow" scope="col" colspan="1" style="text-align: center;">
+	                    <div>Earned</div>
+                    </th>
+
+                </tr>
+
+            </thead>
+
+            <tr class="dataRow odd">
+            <th class="headerRow" scope="col" colspan="1">
+            	<div><b>Historical</b></div>
+            	</th>
+            	<td class="dataCell" colspan="1">
+            		<apex:outputlink value="/apex/XScoreDetails?name={!c.Name}&sc=c&cid={!c.Id}&sval={!historicalContributedScore.Score}&date={!historicalContributedScore.CalcDateOnly}" target="_blank">
+	            		<span><b>{!historicalContributedScore.Score}</b> pts; </span>
+	           		</apex:outputlink>
+   	            	<apex:outputText value="{0,date,MMM dd, yyyy. HH:mm}">
+					    <apex:param value="{!historicalContributedScore.CalcDate}" /> 
+					</apex:outputText>
+            	</td>
+            	<td class="dataCell" colspan="1">
+            		<apex:outputlink value="/apex/XScoreDetails?name={!c.Name}&sc=E&cid={!c.Id}&sval={!historicalEarnedScore.Score}&date={!historicalEarnedScore.CalcDateOnly}" target="_blank">
+	            		<span><b>{!historicalEarnedScore.Score} </b> pts; </span> 
+	           		</apex:outputlink>
+            		<apex:outputText value="{0,date,MMMM dd, yyyy. HH:mm}">
+					    <apex:param value="{!historicalEarnedScore.CalcDate}" /> 
+					</apex:outputText>
+           		</td>
+            		
+            </tr>
+            <tr class="dataRow even">
+            	<td class="dataCell" colspan="1"><div><b>Potential</b></div></td>
+            	<td class="dataCell" colspan="1">
+            		<apex:outputlink value="/apex/XScoreDetails?name={!c.Name}&sc=Ex&cid={!c.Id}&sval={!potentialContributedScore.Score}&date={!potentialContributedScore.CalcDateOnly}" target="_blank">
+	            		<span><b>{!potentialContributedScore.Score} </b> pts; </span>
+	           		</apex:outputlink>
+            	
+            		<apex:outputText value="{0,date,MMMM dd, yyyy. HH:mm}">
+					    <apex:param value="{!potentialContributedScore.CalcDate}" /> 
+					</apex:outputText>
+            	</td> 
+            	<td class="dataCell" colspan="1">
+            	
+            		<apex:outputlink value="/apex/XScoreDetails?name={!c.Name}&sc=Pe&cid={!c.Id}&sval={!potentialEarnedScore.Score}&date={!potentialEarnedScore.CalcDateOnly}" target="_blank">
+	            		<span><b>{!potentialEarnedScore.Score} </b> pts; </span> 
+	           		</apex:outputlink>
+            		<apex:outputText value="{0,date,MMMM dd, yyyy. HH:mm}">
+					    <apex:param value="{!potentialEarnedScore.CalcDate}" /> 
+					</apex:outputText>
+           		</td>
+            </tr>
+
+        </table>   
+
+</apex:page>

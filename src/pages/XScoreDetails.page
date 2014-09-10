@@ -1,0 +1,21 @@
+<apex:page controller="XScoreDetailsController"  sidebar="false" >
+<!-- Begin Default Content REMOVE THIS -->
+<br/>
+<br/>
+<h1>Score {!$CurrentPage.parameters.sval} as of {!$CurrentPage.parameters.date}</h1>
+<br/>
+<br/>
+<br/>
+<apex:form >
+<apex:pageBlock title="Score Details for {!$CurrentPage.parameters.name}">
+
+{!measureDesc}
+<br/><br/>
+        <apex:pageBlockTable value="{!scoreDetails}" var="o">
+            <apex:column headerValue="Name" value="{!o.Name}"/>
+            <apex:column headerValue="Rule Score" value="{!o.Score}"/>
+            <apex:column headerValue="Rule Description" value="{!o.Description}"/>
+        </apex:pageBlockTable>
+	</apex:pageBlock>
+</apex:form>
+</apex:page>

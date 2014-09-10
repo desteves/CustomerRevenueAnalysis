@@ -1,0 +1,29 @@
+<apex:page controller="UserProfile360Controller" sidebar="false" >
+<style>
+.apexp .bPageBlock.apexDefaultPageBlock .pbBody .pbSubheader {
+border-top: 0;
+color: black;
+}
+</style>
+
+<!-- Begin Default Content REMOVE THIS -->
+<apex:form >
+<apex:pageBlock title="Hello {!$User.FirstName}!">
+	
+ <!-- 	<apex:commandButton rendered="{!IF(($CurrentPage.parameters.Id!=null), '1','0')}"> 	</apex:commandButton>  -->
+    <apex:detail subject="{!$CurrentPage.parameters.Id}" relatedList="false" title="false"/> 
+    
+    <apex:pageBlock title="360 Scores">
+     <p style="font-size:25px">Expected Value    <span style="font-size:30px;left:200px">{!ExpectedScore}</span> </p>
+     
+     <p style="font-size:25px">Earned Value      <span style="font-size:30px">{!EarnedScore} </span></p>
+     
+     <p style="font-size:25px">Contributed Value <span style="font-size:30px">{!ContributedScore}</span> </p>
+     
+      </apex:pageBlock>
+     
+     </apex:pageBlock>
+    
+   
+</apex:form>
+</apex:page>

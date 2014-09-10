@@ -1,0 +1,34 @@
+<apex:component controller="X360ScheduleController"  allowDML="true" id="X360ScheduleComponent">
+    <apex:form id="mainForm">
+        <apex:pageBlock title="Scheduled Job Details" rendered="{!IF($Profile.Name =='System Administrator' || $Profile.Name =='360 Business User', true , false)}" >
+            <apex:outputText >      
+                Ensure the following: <br />
+                Job Name: <b> X360 Measure Executor </b> <br />
+                Apex Class: <b> X360Schedulable </b><br />
+                <br />
+            </apex:outputText>
+            <apex:pageBlockTable value="{!cronTrigger}" var="cron">
+                <apex:column value="{!cron.CronJobDetail.Name}" />
+                <apex:column value="{!cron.CronExpression}" />
+                <apex:column value="{!cron.TimesTriggered}" />
+                <apex:column value="{!cron.NextFireTime}" />
+            </apex:pageBlockTable>
+            <apex:pageBlockButtons location="bottom">
+                <apex:commandButton value="New" action="{!newSchedulable}"/>
+                <apex:commandButton value="Edit" action="{!newSchedulable}" /> 
+                <apex:commandButton value="Delete" action="{!deleteSchedulable}" />                
+            </apex:pageBlockButtons>
+        </apex:pageBlock>
+        <apex:pageBlock title="Measures to Execute" rendered="{!IF($Profile.Name =='System Administrator' || $Profile.Name =='360 Business User', true , false)}" >
+            <c:MultiselectPicklist leftLabel="Available Measures"
+                leftOptions="{!allMeasures}" rightLabel="Selected Measures"
+                rightOptions="{!selectedMeasures}" size="12" width="440px" />
+            <apex:outputText >{!message}</apex:outputText>
+            <apex:pageBlockButtons location="bottom">
+                <apex:commandButton value="Save" action="{!saveMeasures}" />
+      <!--           <apex:commandButton value="Select None" action="{!clearMeasures}" />                
+                <apex:commandButton value="Select All" action="{!allMeasures}" />    -->
+            </apex:pageBlockButtons>
+        </apex:pageBlock>       
+    </apex:form>
+</apex:component>

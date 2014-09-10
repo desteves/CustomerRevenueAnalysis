@@ -1,0 +1,4 @@
+<apex:page id="X360SchedulePage" sidebar="false" >
+    <c:X360ScheduleComponent />
+    <c:X360MeasureComponent />
+</apex:page>

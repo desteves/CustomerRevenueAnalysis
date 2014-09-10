@@ -1,0 +1,104 @@
+<apex:component Controller="X360RuleComponentController">
+
+
+	<apex:attribute name="Rule_UI_Object"
+		description="This is the rule for the component." type="X360RuleUI"
+		required="true" assignTo="{!rule_ui_obj}" />
+
+
+	<div class="RuleDiv {!IF(rule_ui_object.Rule.Type__c=='Account','AccountRule','ContactRule')}" >
+		<div class="removebutton"
+			style="float: right; margin: 0 0 10 0; color: red; width: 10px;">
+			X</div>
+			<input class="scoreBox"
+			style="float: right; margin: 0 30px 0 0; color: red; width: 50px;height:30px;font-size:27px">
+			</input>
+			
+		<div class="ruleDesc" style="width: 100%">{!rule_ui_object.Rule.Description__c}</div>
+		<div class="ruleId" style="display:none;">{!rule_ui_object.Rule.Id}</div>
+
+			<apex:repeat value="{!rule_ui_object.params}" var="p">
+
+
+			<div class="parameters" style="display: block; margin: 5px">
+				<div class="title" style="float: left; margin: 5px;">{!p.Name}</div>
+				<div id="field" style="float: left; margin: 5px 5px 5px 20px;">
+
+				<div class="paramId" style="display:none;">{!p.Id}</div>
+				<div class="paramType" style="display:none;">{!p.Type}</div>
+				
+				<apex:outputText rendered="{!(p.Type=='PICKLIST')}" escape="false">
+				
+				
+				<apex:outputText rendered="{!(p.isMultiple=='true')}" escape="false">
+				
+				
+				<select id="selectBox" multiple="multiple">
+				
+				<apex:repeat value="{!p.Values}" rendered="{!(p.Type=='PICKLIST')}" var="io">
+				
+				<option value="{!io}">{!io}</option>
+     		
+				</apex:repeat>
+				
+				</select>
+				</apex:outputText>
+				
+				<apex:outputText rendered="{!(p.isMultiple!='true')}" escape="false">
+				
+				
+				<select >
+				
+				<apex:repeat value="{!p.Values}" rendered="{!(p.Type=='PICKLIST')}" var="io">
+				
+				<option value="{!io}">{!io}</option>
+     		
+				</apex:repeat>
+				
+				</select>
+				</apex:outputText>
+				
+				
+				
+				</apex:outputText>
+				
+				<apex:outputText rendered="{!(p.Type=='DATETIME'||p.Type=='DATE')}" escape="false">
+				
+				<input class="DATEPICKER"></input>
+				
+			    </apex:outputText>
+				
+				
+				<apex:outputText rendered="{!(p.Type=='DOUBLE'||p.Type=='INTEGER'||p.Type=='CURRENCY')}" escape="false">
+				
+				<input class="NUMBER"></input>
+				
+			    </apex:outputText>
+				
+				<apex:outputText rendered="{!(p.Type=='STRING'||p.Type=='TEXTAREA')}" escape="false">
+				
+				<input class="TEXT"></input>
+				
+			    </apex:outputText>
+				
+				
+				<apex:outputText rendered="{!(p.Type=='BOOLEAN')}" escape="false">
+				
+				<select id="selectBox">
+					<option value="true">True</option>
+					<option value="false">False</option>
+				</select>
+			    </apex:outputText>
+				
+				
+
+				</div>
+
+			</div>
+
+
+		</apex:repeat>
+		<div style="clear: both"></div>
+
+	</div>
+</apex:component>

@@ -1,0 +1,113 @@
+<apex:page id="myPage" controller="XRuleBuilderController">
+    <style type="text/css">
+       p.gotop {text-align: left, top}
+       p.goright {text-align: center, right}
+    </style>
+    
+    <apex:form id="mainForm" >
+    	<apex:pageBlock title="Rule Description">
+        	<span>Name of the Rule: </span>
+        	<apex:inputText value="{!ruleName}"/>
+        	<span>Rule Description: </span>
+        	<apex:inputText value="{!ruleDesc}" /><br/>
+        	<span>Select an entity: </span>
+        	<apex:selectList value="{!selectedEntity}" size="1" disabled="{!IF(isAnd,true,false)}">
+            	<apex:selectOptions value="{!entities}" /> 
+            		<apex:actionsupport event="onchange" action="{!entities_SelectedIndexChanged}" rerender="mainForm" />
+        	</apex:selectList>
+        	&nbsp;&nbsp;&nbsp;&nbsp;
+        	<span>Select a Score Type: </span>
+        	<apex:selectList value="{!selectedScore}" size="1">
+            	<apex:selectOptions value="{!scoreTypes}" /> 
+        	</apex:selectList>
+            &nbsp;&nbsp;&nbsp;&nbsp;
+        	
+    	</apex:pageBlock>
+        
+    	
+    	<apex:pageBlock title="Rule Details" id="detailsBlock" >
+         <span>{!debug} </span>
+        	<apex:outputPanel >
+	        	<span>Select group of fields:</span>&nbsp;&nbsp;
+	        	<apex:selectList size="1" value="{!selectedFieldGroup}" disabled="{!IF(isAnd,true,false)}">
+	            	<apex:selectOptions value="{!fieldsGroup}" /> 
+	            	<apex:actionsupport event="onchange" action="{!fieldsGroup_SelectedIndexChanged}" rerender="typeOp" />
+	        	</apex:selectList>
+        	</apex:outputPanel>
+        	
+        	
+        	<apex:pageBlockSection id="typeOp" columns="3" >
+        	
+        	<apex:outputPanel >
+	        	<span>Select an attribute to filter on:</span> <br/>
+	        	<apex:selectList value="{!selectedField}" size="1">
+	            	<apex:selectOptions value="{!fieldsList}" />
+	            	<apex:actionsupport event="onchange" action="{!fieldsList_SelectedIndexChanged}" rerender="typeOp" /> 
+	        	</apex:selectList>
+        	</apex:outputPanel>
+        	
+        	
+        	<apex:outputPanel >
+	        	<span>Select an aggregation function:</span> <br/>
+	        	<apex:selectList value="{!selectedFn}" size="1"> <!--  disabled="{!IF(aggIsSelected,true,false)}" -->
+	            	<apex:selectOptions value="{!aggregations}" />
+	            	<apex:actionsupport event="onchange" action="{!aggregiations_SelectedIndexChanged}" rerender="typeOp" /> 
+	        	</apex:selectList>
+        	</apex:outputPanel>
+        	<apex:outputPanel />
+        	<apex:outputPanel >
+	        	<span>Operator: </span><br/>
+	        	<apex:selectList value="{!selectedOp}" size="1">
+	            	<apex:selectOptions value="{!operations}" />
+	        	</apex:selectList>
+        	</apex:outputPanel>
+        	
+        	<apex:outputPanel >
+	        	<p class="gotop">Value:</p>
+	        	<apex:inputText value="{!param1}" id="inputParam" disabled="{!IF(isParam1,true,false)}" rendered="{!IF(isPickList || isDate || isBool, false, true)}" />
+	        	<apex:selectList value="{!selectedPickListItem}" disabled="{!IF(isParam1,true,false)}" size="1" rendered="{!isBool}" multiselect="false">
+	        		<apex:selectOptions value="{!picklist}" />
+        		</apex:selectList>
+        		<apex:selectList value="{!selectedPickListItem}" disabled="{!IF(isParam1,true,false)}" size="1" rendered="{!isPickList}" multiselect="true">
+	        		<apex:selectOptions value="{!picklist}" />
+        		</apex:selectList>
+        	</apex:outputPanel>
+        	
+        	<apex:outputPanel >
+	        	<apex:inputCheckbox value="{!isParam1}" >
+	        		<apex:actionSupport event="onchange" rerender="typeOp" />
+	    		</apex:inputCheckbox>
+	    		Is Parameter 
+        	</apex:outputPanel>
+        	<apex:commandButton action="{!addAnd}" value="AND" />
+        	</apex:pageBlockSection>
+        	
+        <apex:pageBlockButtons location="bottom">
+        	<apex:commandButton action="{!save}" value="Save" />
+        	<apex:commandButton action="{!init}" value="Cancel" />
+        </apex:pageBlockButtons>
+        
+        </apex:pageBlock> 
+        
+    </apex:form>
+	<apex:form >
+	    <apex:pageBlock id="dttable" title="Conditions" >
+	        <apex:pageBlockTable value="{!conds}" var="c">
+	            <apex:column headerValue="Name">
+	            	{!c.condStr}
+	            </apex:column>
+	       		<apex:column >
+	       			<apex:facet name="header">Action</apex:facet>
+	       			<apex:commandLink action="{!remove}" reRender="dttable" >
+	       			<apex:param assignTo="{!conid}" value="{!c.id}" name="assignvalue" />Remove</apex:commandLink> 
+	       			&nbsp;&nbsp;&nbsp;&nbsp;
+	       			<apex:commandLink action="{!edit}" reRender="mainForm,dttable" >
+	       			<apex:param assignTo="{!conid}" value="{!c.id}" name="assignvalue" />Edit</apex:commandLink> 
+	       		</apex:column>
+	       		
+	        </apex:pageBlockTable>
+		</apex:pageBlock>
+	</apex:form>
+         <span>{!debug} </span>
+            <span id="statusMsg">{!status} </span>
+</apex:page>

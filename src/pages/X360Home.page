@@ -1,0 +1,94 @@
+<apex:page Controller="X360HomeController"  id="X360HomePage" sidebar="false" >
+<apex:form >
+	<apex:pageBlock title="Top Expected Contacts">
+        <apex:pageBlockTable value="{!topExpectedList}" var="o">
+            <apex:column headerValue="Name">
+            	<apex:outputlink value="/apex/X360UserProfile?Id={!o.Id}&sfdc.tabName=01rf0000000D0j9">{!o.Name}</apex:outputlink>
+            </apex:column>
+            <apex:column headerValue="Expected Score">
+            	<apex:outputlink value="/apex/XScoreDetails?name={!o.Name}&sc=Ex&cid={!o.Id}&sval={!o.Score}&date={!o.DateVal}">
+            		{!o.Score}
+           		</apex:outputlink>
+       		</apex:column>
+       		<apex:column headerValue="Date">
+       			<apex:outputText value="{0,date,MM'/'dd'/'yyyy}">
+    				<apex:param value="{!o.DateVal}" /> 
+				</apex:outputText>
+			</apex:column>
+        </apex:pageBlockTable>
+	</apex:pageBlock>
+</apex:form>
+<apex:form >
+	<apex:pageBlock title="Top Earned Contacts">
+        <apex:pageBlockTable value="{!topEarnedList}" var="o">
+            <apex:column headerValue="Name" >
+            	<apex:outputlink value="/apex/X360UserProfile?Id={!o.Id}&sfdc.tabName=01rf0000000D0j9">{!o.Name}</apex:outputlink>
+            </apex:column>
+            <apex:column headerValue="Earned Score">
+            	<apex:outputlink value="/apex/XScoreDetails?name={!o.Name}&sc=E&cid={!o.Id}&sval={!o.Score}&date={!o.DateVal}">
+            		{!o.Score}
+           		</apex:outputlink>
+       		</apex:column>
+       		<apex:column headerValue="Date">
+       			<apex:outputText value="{0,date,MM'/'dd'/'yyyy}">
+    				<apex:param value="{!o.DateVal}" /> 
+				</apex:outputText>
+			</apex:column>
+        </apex:pageBlockTable>
+	</apex:pageBlock>
+</apex:form>
+<apex:form >
+	<apex:pageBlock title="Top Contributed Contacts">
+        <apex:pageBlockTable value="{!topContributedList}" var="o">
+            <apex:column headerValue="Name">
+            	<apex:outputlink value="/apex/X360UserProfile?Id={!o.Id}&sfdc.tabName=01rf0000000D0j9">{!o.Name}</apex:outputlink>
+            </apex:column>
+            <apex:column headerValue="Contributed Score">
+            	<apex:outputlink value="/apex/XScoreDetails?name={!o.Name}&sc=c&cid={!o.Id}&sval={!o.Score}&date={!o.DateVal}">
+            		{!o.Score}
+           		</apex:outputlink>
+            </apex:column>
+       		<apex:column headerValue="Date">
+       			<apex:outputText value="{0,date,MM'/'dd'/'yyyy}">
+    				<apex:param value="{!o.DateVal}" /> 
+				</apex:outputText>
+			</apex:column>
+        </apex:pageBlockTable>
+	</apex:pageBlock>
+</apex:form>
+<apex:form >
+	<apex:pageBlock title="Top Earned Accounts">
+        <apex:pageBlockTable value="{!topEarnedAccountList}" var="o">
+            <apex:column headerValue="Name">
+            	<apex:outputlink value="/{!o.Id}">{!o.Name}</apex:outputlink>
+            </apex:column>
+            <apex:column headerValue="Earned Score">
+            	<apex:outputlink value="/apex/XScoreDetails?name={!o.Name}&sc=Ea&aid={!o.Id}&sval={!o.Score}&date={!o.DateVal}">
+            		{!o.Score}
+           		</apex:outputlink>
+            </apex:column>
+       		<apex:column headerValue="Date">
+       			<apex:outputText value="{0,date,MM'/'dd'/'yyyy}">
+    				<apex:param value="{!o.DateVal}" /> 
+				</apex:outputText>
+       		</apex:column>
+        </apex:pageBlockTable>
+	</apex:pageBlock>
+</apex:form>
+<apex:form >
+	<apex:pageBlock title="Top Expected Accounts">
+        <apex:pageBlockTable value="{!topExpectedAccountList}" var="o">
+            <apex:column headerValue="Name">
+            	<apex:outputlink value="/{!o.Id}">{!o.Name}</apex:outputlink>
+            </apex:column>
+            <apex:column headerValue="Expected Score">
+            	<apex:outputlink value="/apex/XScoreDetails?name={!o.Name}&sc=Exa&aid={!o.Id}&sval={!o.Score}&date={!o.DateVal}">
+            		{!o.Score}
+           		</apex:outputlink>
+            </apex:column>
+       		<apex:column headerValue="Date" value="{!o.DateVal}" />
+        </apex:pageBlockTable>
+	</apex:pageBlock>
+</apex:form>
+
+</apex:page>

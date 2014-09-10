@@ -1,0 +1,3 @@
+<apex:page standardController="Contact" tabStyle="Contact">
+{!contact.name}
+</apex:page>

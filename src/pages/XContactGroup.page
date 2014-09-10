@@ -1,0 +1,36 @@
+<apex:page controller="XContactGroupController">
+<apex:form id="mainForm" >
+
+    	<apex:pageBlock title="Contact Group">
+        	
+        	<span>Group Name: </span>
+        	<apex:inputText value="{!groupName}" />
+        	&nbsp;&nbsp;&nbsp;&nbsp;
+        	
+        	<span>Member: </span>
+        	<c:AutoCompleteV2 allowClear="true" importJquery="true" labelField="Name" 
+        	SObject="Contact" valueField="ID" targetField="{!contactName}" style="width:200px"/>  
+        	
+        	&nbsp;&nbsp;&nbsp;&nbsp;
+        	<apex:commandButton value="Add" action="{!addContact}" reRender="grouptbl"/>
+        	
+        	<apex:pageBlock id="grouptbl" title="Members" >
+	        <apex:pageBlockTable value="{!members}" var="m">
+	            <apex:column headerValue="Name">
+	            	{!m.Name}
+	            </apex:column>
+	       		<apex:column >
+	       			<apex:commandLink action="{!remove}" reRender="grouptbl" >
+	       			<apex:param assignTo="{!contactName}" value="{!m.Id}" name="assignvalue" />Remove</apex:commandLink> 
+	       			 
+	       		</apex:column>
+	       		
+	        </apex:pageBlockTable>
+		</apex:pageBlock>
+		<apex:pageBlockButtons location="bottom">
+        	<apex:commandButton action="{!save}" value="Save" />
+        </apex:pageBlockButtons>
+       	</apex:pageBlock>
+    	{!debug}
+  	</apex:form>
+</apex:page>

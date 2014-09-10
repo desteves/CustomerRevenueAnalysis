@@ -1,0 +1,13 @@
+<apex:component controller="X360Executor"  allowDML="true" id="X360ExecutorComponent">
+    <apex:form id="mainForm">   
+        <apex:pageBlock title="Run Executor: ">         
+            <apex:inputCheckbox value="{!sendEmail}" /> Receive email notification. <br/> <br/>
+            Results will appear below:<br/> 
+            <apex:inputtextarea value="{!message}" readonly="true" cols="120" rows="10" >
+				</apex:inputtextarea>
+            <apex:pageBlockButtons location="bottom">
+                <apex:commandButton value="Execute Now" action="{!executeNow}" />
+            </apex:pageBlockButtons>
+        </apex:pageBlock>
+    </apex:form>
+</apex:component>

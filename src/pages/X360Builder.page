@@ -1,0 +1,342 @@
+<apex:page Controller="X360BuilderController" sidebar="false" >
+	<apex:form >
+		<apex:includeScript value="{!URLFOR($Resource.Jquery2_0_3)}" />
+		<apex:includeScript value="{!URLFOR($Resource.jQuery)}" />
+		<link rel="stylesheet"
+			href="//code.jquery.com/ui/1.10.4/themes/cupertino/jquery-ui.css" />
+<script type="text/javascript">
+  
+  
+   $().ready(function () {
+
+    $("#measurebuildingarea").droppable({
+
+        drop: function (event, ui) {
+
+            var b = $(ui.draggable).clone()
+            $(this).append(b);
+
+            b.find(".removebutton").show();
+
+            $(b.find(".removebutton")).click(
+                function () {
+                    $(this).parent().parent().parent().remove();
+                    return;
+                });
+
+            $(b.find(".parameters")).show();
+ $(b.find(".scoreBox")).show();
+
+            $(b.find(".DATEPICKER")).datepicker();
+
+
+        }
+    });
+
+
+
+
+    $("#ruleslist li").draggable({
+
+        helper: "clone",
+
+    }).disableSelection();
+
+
+    $(".removebutton").hide();
+    $(".parameters").hide();
+$(".scoreBox").hide();
+
+
+    $("#entityList").change(
+
+        function () {
+
+            var str = this.value;
+
+            if (str == "Contact") {
+                $(".ContactRule").parent().parent().show();
+                $(".AccountRule").parent().parent().hide();
+            } else {
+                $(".ContactRule").parent().parent().hide();
+                $(".AccountRule").parent().parent().show();
+            }
+
+
+
+
+        }
+
+    );
+
+    $("#entityList").val("Contact");
+
+    $("#entityList").change();
+
+
+    $("#SaveMeasure").click(
+
+        function () {
+
+
+            var build = $("#measurebuildingarea");
+
+
+            var rules = [];
+
+            var MeasureDefinition;
+
+            var MeasureName = $("#MeasureName")[0].value;
+
+            if (MeasureName == null || MeasureName.trim() == '') {
+                alert("Enter a measure Name");
+                return;
+            }
+
+
+
+
+            var MeasureDesc = $("#MeasureDescription")[0].value;
+
+
+
+            if (MeasureDesc == null || MeasureDesc.trim() == '') {
+                alert("Enter a measure Description");
+                return;
+            }
+
+
+			var MeasureType = $("#entityList").val();
+
+
+            var ruleError = 'false';
+
+
+			if(build.find(".RuleDiv").size()==0)
+			{
+				alert("Add rules");
+				return;
+			}
+
+            build.find(".RuleDiv").each(
+
+                function () {
+
+
+                    var ruleId = $(this).find(".ruleId").html();
+
+                    var parameters = [];
+
+                    $(this).find(".parameters").each(
+
+                        function () {
+
+                            var parameterTitle = $(this).find(".title").html();
+                            var parameterId = $(this).find(".paramId").html();
+                            var parameterType = $(this).find(".paramType").html();
+
+                            var param;
+
+                            if (parameterType == "PICKLIST" || parameterType == "BOOLEAN") {
+                                $(this).find("select").change()
+                                var values = $(this).find("select").val() || [];
+
+
+                                if (values.constructor == Array) {
+                                    var value = '';
+                                    values.forEach(function (item) {
+                                        if (value != '')
+                                            value = value + ',' + item;
+                                        else
+                                            value = item;
+                                    });
+                                } else {
+                                    value = values;
+                                }
+
+
+                                if (value == null || value.trim() == '') {
+                                    alert("Enter value for " + parameterTitle);
+                                    ruleError = 'true';
+                                    return;
+                                }
+
+
+                                param = {
+                                    id: parameterId,
+                                    value: value
+                                }
+                            }
+                            if (parameterType == "DATE" || parameterType == "DATETIME") {
+                                var date = $(this).find(".DATEPICKER")[0].value;
+
+                                if (date == null) {
+                                    alert("Enter value for " + parameterTitle);
+                                    ruleError = 'true';
+                                    return;
+                                }
+
+                                param = {
+                                    id: parameterId,
+                                    value: date
+                                }
+
+                            } else if (parameterType == "DOUBLE" || parameterType == "INTEGER" || parameterType == "CURRENCY") {
+                                var value = $(this).find("input .NUMBER").value;
+
+                                if (value == null) {
+                                    alert("Enter value for " + parameterTitle);
+                                    ruleError = 'true';
+                                    return;
+
+                                }
+
+                                param = {
+                                    id: parameterId,
+                                    value: value
+                                }
+                            } else if (parameterType == "STRING" || parameterType == "TEXTAREA") {
+                                var value = $(this).find("input .TEXT").val();
+
+                                if (value == null) {
+                                    alert("Enter value for " + parameterTitle);
+                                    ruleError = 'true';
+                                    return;
+                                }
+
+                                param = {
+                                    id: parameterId,
+                                    value: value
+                                }
+                            }
+
+                            // alert(param.id+param.value);
+
+                            parameters.push(param);
+                        }
+
+
+
+
+                    );
+
+                    var rule = {
+
+                        id: ruleId,
+                        params: parameters,
+
+
+
+                    }
+
+                    rules.push(rule);
+
+                }
+            );
+
+            MeasureDefinition = {
+                MeasureName: MeasureName,
+                MeasureDescr: MeasureDesc,
+                MeasureType:MeasureType,
+                RulesDefs: rules
+            }
+
+            if (ruleError != 'true') {
+                getSave(JSON.stringify(MeasureDefinition));
+                //alert('Measure Saved Successfully'+success);
+            }
+
+
+
+        });
+
+
+
+
+});
+
+  
+  
+  </script>
+
+		<div id="content" style="height: 100%">
+			<div id="left" style="float: left; height: 100%; width: 30%">
+
+				<apex:pageblock title="Rules" id="ruleslist">
+
+						<span> Select entity </span> 
+						
+						<select id="entityList">
+							<option  value="Account">Account</option>
+  							<option value="Contact">Contact</option>
+						</select>
+					
+					<ul id="ruleslist"
+						style="list-style-type: none; min-height: 400px; padding: 0; left: 0"
+						class="connectedSortable">
+
+						
+
+						<apex:repeat value="{!rulesUI}" var="o">
+
+
+							<li class="ui-state-default"
+								style="padding: 10px; margin: 5px 5px 0px 5px;"><c:X360RuleComponent Rule_UI_Object="{!o}" /></li>
+
+						</apex:repeat>
+					</ul>
+				</apex:pageblock>
+			</div>
+
+			<div id="right"
+				style="float: left; height: 100%; padding: 0 0 0 10px; width: 67%">
+				<apex:pageBlock title="Measure Details">
+
+					<span>Measure Name </span>
+					<input id="MeasureName"/>
+					<span>Description: </span>
+					<input id="MeasureDescription"/>
+					
+					<span> For </span> 
+						
+						<select id="measuretypeList">
+						<apex:repeat value="{!MeasureTypes}" var="m">
+
+							<option  value="m.Measure_Type_Code__C">m.Name</option>
+							
+						</apex:repeat>
+						</select>
+					
+					
+					<span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  </span>
+					
+				</apex:pageBlock>
+				<apex:pageblock title="Measure Builder" id="builder">
+
+					<div></div>
+
+					<ul id="measurebuildingarea"
+						style="list-style-type: none; min-height: 400px; padding: 0; left: 0">
+
+
+					</ul>
+
+
+
+				</apex:pageblock>
+				<apex:pageBlock id="debug">
+				<input id="SaveMeasure" type="button" value="Save" />
+				<apex:actionFunction action="{!getSave}" name="getSave" rerender="debug" status="myStatus" >
+					<apex:param name="firstParam" assignTo="{!measureDef}" value="" />
+				</apex:actionFunction>
+				<apex:actionStatus startText="requesting..." id="myStatus">
+        <apex:facet name="stop"></apex:facet>
+    </apex:actionStatus>
+				<span>{!measureDef}</span>
+				</apex:pageBlock>
+			</div>
+		</div>
+
+
+	</apex:form>
+</apex:page>
